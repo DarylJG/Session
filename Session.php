@@ -1,6 +1,5 @@
 <?php
 
-	namespace SlayerSolutions;
 	/*
 	*
 	*
@@ -18,7 +17,7 @@
 	*/
 	
 	class Session { 
-		protected $Session_Started = false; 
+		public $Session_Started = false; 
 		public function __construct(){
 			/*
 			*
@@ -28,7 +27,7 @@
 			*			To invoke a session_start() by calling $Class->init();
 			*/
 				if (session_status() === 1){
-					$this->Session_Started = true;
+					$this->Session_Started = false;
 					return false; 
 				}
 				return true;
@@ -50,15 +49,21 @@
 				Getting the current session status, and return readable information on the current status
 			*/
 			$Return_Switch = false; 
-			if (session_status() === 1){
+			switch (session_status()){
+				case PHP_SESSION_DISABLED:
 				$Return_Switch = "Session Disabled";
-			}elseif (session_status() === 2){
-				$Return_Switch = "Session Enabled, but no sessions exist";
-			}elseif (session_status() === 3){
-				$Return_Switch = "Session Enabled, and Sessions exist";
+				break;
+				case PHP_SESSION_NONE:
+					$Return_Switch = "Session Enabled, None exist";
+					break;
+				case PHP_SESSION_ACTIVE:
+					$Return_Switch = "Sessions Enabled, Sessions Exist";
+					break; 
+				}
+				return $Return_Switch;
+					
 			}
-			return $Return_Switch;
-		}
+
 		public function Set ($Key = false, $Value){
 			/*
 				Set a value within the $_SESSION global
@@ -90,21 +95,6 @@
             return false;
 		}
 
-
-        function Session_Dataseek(){
-            /*
-             * Seek through the entire Session array with given keys for a specific value.
-             * There is no argument cap.
-             */
-            $Pointer = $_SESSION;
-                foreach (func_get_args() AS $Arguments){
-                    if (!is_array($Pointer) || !is_scalar($Arguments) || !isset($Pointer[$Arguments])){
-                        return false;
-                    }
-                    $Pointer = $Pointer[$Arguments];
-                }
-            return$Pointer;
-        }
 
 	
 	} // Close class

@@ -1,0 +1,16 @@
+After having reports of a broken API, I conducted research into the root problem, it was made apparent that there was an underlying issue with the Session Wrapper.
+
+1. Primary Validations being conducted in the __construct method: 
+	Problem: 
+	   If sessions was not active when initializing the class, the internal validations would see a session which does 	exist due to a error with the conditinal if statement
+	Resolution: 
+	 Fixed the condition
+		Original Code: if (session_status() === 1){
+					$this->Session_Started = true;
+		Fixed Code:	if (session_status() === 1){
+					$this->Session_Started = false;
+2. Wrong feed back from Status_Session method:
+	Problem: 
+		Was giving the wrong feedback in the return attribute.
+	Resolutions: 
+		Restructured the method using switch() & case using the correct validations on each of the return from the 		native php function: session_status(); 
